@@ -4,14 +4,12 @@ import java.util.Scanner;
 
 public class ATM {
 
-    private static final int PIN = 1234;
-    private static final double BALANCE = 2555.25;
-    private static final List<Menu> Menus = new ArrayList<Menu>();
-
+    private static final String PIN = "1234";
+    private static double balance = 12050.25;
+    private static final List<Menu> Menus = new ArrayList<>();
     private static final int[] Billetes = {2000, 1000, 500, 200, 100, 50};
 
     private static Scanner scan;
-
 
     public static void main(String[] args) {
 
@@ -26,53 +24,10 @@ public class ATM {
         System.out.println("Introducir su PIN");
         scan = new Scanner(System.in);
 
-        while (true) {
-            if (scan.nextLine().equals(String.valueOf(PIN)))
-                Iniciar();
-            else {
-                System.out.println("Pin Erroneo");
-                continue;
-            }
-        }
-    }
-
-    public static void Iniciar() {
-
-        MostrarMenu();
-
-        while (true) {
-            scan = new Scanner(System.in);
-
-            switch (scan.nextLine()) {
-                case "1":
-                    System.out.println("Su balance es de: " + BALANCE);
-                    Iniciar();
-                case "2":
-                    int balance = (int) BALANCE;
-                    int total = 0;
-
-                    for (int i : Billetes) {
-                        int cantidad = balance / i;
-                        if (cantidad > 0) {
-                            System.out.println("Cantidad: " + cantidad + "  Billete: " + i);
-                            balance -= cantidad * i;
-                            total += cantidad * i;
-                        }
-                    }
-                    System.out.println("Total a retirar: " + total);
-                    System.out.println("Balance luego del retiro: " + (BALANCE-Double.valueOf(total)));
-                    break;
-                case "3":
-                    System.out.println("Salir del sistema");
-                    break;
-
-                default:
-                    System.out.println("No se encontro una opcion valida.");
-                    continue;
-            }
-
-            System.exit(0);
-        }
+        while (true) if (scan.nextLine().equals(PIN))
+            Iniciar();
+        else
+            System.out.println("Pin Erroneo");
     }
 
     public static void MostrarMenu() {
@@ -85,4 +40,64 @@ public class ATM {
 
     }
 
+    public static void Iniciar() {
+
+        MostrarMenu();
+
+        while (true) {
+            scan = new Scanner(System.in);
+            String texto = "";
+
+            switch (scan.nextLine()) {
+                case "1":
+                    System.out.println("Su balance es de: " + balance);
+                    Iniciar();
+                case "2":
+                    int bal = 0;
+                    System.out.println("Digitar el monto a retirar");
+                    String retiro = scan.nextLine();
+
+                    try {
+                        bal = Integer.parseInt(retiro);
+                    } catch (Exception e) {
+                        System.out.println("El retiro tiene que ser un numero");
+                    }
+
+                    int total = 0;
+
+                    for (int i : Billetes) {
+
+                        if (bal <= 0)
+                            break;
+
+                        int cantidad = bal / i;
+
+                        if (cantidad > 0) {
+                            texto += "Cantidad: " + cantidad + "  Billete: " + i + "\n";
+                            bal -= cantidad * i;
+                            total += cantidad * i;
+                        }
+                    }
+                    if ( bal == 0 )
+                    {
+                        System.out.println(texto);
+                        System.out.println("Total a retirar: " + total);
+                        balance -= total;
+                        System.out.println("Balance luego del retiro: " + (balance));
+                    }
+                    else
+                        System.out.println("El monto a retirar no se pudo procesar por: " + bal);
+                    Iniciar();
+                case "3":
+                    System.out.println("Salir del sistema");
+                    break;
+
+                default:
+                    System.out.println("No se encontro una opcion valida.");
+                    continue;
+            }
+
+            System.exit(0);
+        }
+    }
 }
