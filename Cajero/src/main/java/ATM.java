@@ -6,16 +6,16 @@ public class ATM {
 
     private static final String PIN = "1234";
     private static double balance = 12050.25;
-    private static final List<Menu> Menus = new ArrayList<>();
-    private static final int[] Billetes = {2000, 1000, 500, 200, 100, 50};
+    private static final List<Menu> MENUS = new ArrayList<>();
+    private static final int[] BILLETES = {2000, 1000, 500, 200, 100, 50};
 
     private static Scanner scan;
 
     public static void main(String[] args) {
 
-        Menus.add(new Menu(1, "Consultar Balance"));
-        Menus.add(new Menu(2, "Retiro de Efectivo"));
-        Menus.add(new Menu(3, "Salir"));
+        MENUS.add(new Menu(1, "Consultar Balance"));
+        MENUS.add(new Menu(2, "Retiro de Efectivo"));
+        MENUS.add(new Menu(3, "Salir"));
 
         ValidarPin();
     }
@@ -34,7 +34,7 @@ public class ATM {
         System.out.println("-----------------------------------------------");
         System.out.println("Bienvenido a su ATM BDI");
         System.out.println("-----------------------------------------------");
-        for (Menu menu : Menus)
+        for (Menu menu : MENUS)
             System.out.println(menu.getId() + "-" + menu.getDescription());
         System.out.println("-----------------------------------------------");
 
@@ -65,7 +65,7 @@ public class ATM {
 
                     int total = 0;
 
-                    for (int i : Billetes) {
+                    for (int i : BILLETES) {
 
                         if (bal <= 0)
                             break;
@@ -93,7 +93,11 @@ public class ATM {
                     break;
 
                 default:
-                    System.out.println("No se encontro una opcion valida.");
+                    String opciones = ", las opciones disponibles son: ";
+                    for (Menu menu : MENUS) {
+                        opciones += menu.getId() + " , ";
+                    }
+                    System.out.println("No se encontro una opcion valida" + opciones);
                     continue;
             }
 
