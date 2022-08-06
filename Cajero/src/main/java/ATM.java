@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,8 +8,7 @@ public class ATM {
     private static final String PIN = "1234";
     private static double balance = 12050.25;
     private static final List<Menu> Menus = new ArrayList<>();
-    private static final int[] Billetes = {2000, 1000, 500, 200, 100, 50};
-
+    private static final int[] Billetes = {1000, 500, 200};
     private static Scanner scan;
 
     public static void main(String[] args) {
@@ -59,33 +59,55 @@ public class ATM {
 
                     try {
                         bal = Integer.parseInt(retiro);
+                        if (bal > balance) {
+                            System.out.println("El retiro es mayor al balance");
+                            Iniciar();
+                        }
+
                     } catch (Exception e) {
                         System.out.println("El retiro tiene que ser un numero");
                     }
 
                     int total = 0;
 
-                    for (int i : Billetes) {
+                    List<BilletesValidos> ListaBilletesValidos = new ArrayList<>();
+
+                    for (int i = 0; i < Billetes.length; i++) {
+
+                        int billete = Billetes[i];
 
                         if (bal <= 0)
                             break;
 
-                        int cantidad = bal / i;
+                        int cantidad = bal / billete;
 
                         if (cantidad > 0) {
-                            texto += "Cantidad: " + cantidad + "  Billete: " + i + "\n";
-                            bal -= cantidad * i;
-                            total += cantidad * i;
+                            bal -= cantidad * billete;
+                            ListaBilletesValidos.add(new BilletesValidos(billete, cantidad, i));
+                        }
+
+                        for (int e = 0; e < Billetes.length; e++) {
+                            if (bal > 0 && Billetes.length - 1 == e) {
+                                BilletesValidos eliminar = ListaBilletesValidos.get(ListaBilletesValidos.size() - 1);
+                                i = eliminar.getIndex();
+                                bal += eliminar.getCantidad() * eliminar.getValor();
+
+                                ListaBilletesValidos.remove(eliminar);
+                            }
                         }
                     }
-                    if ( bal == 0 )
-                    {
+
+                    for (BilletesValidos b : ListaBilletesValidos) {
+                        texto += "Cantidad: " + b.getCantidad() + "  Billete: " + b.getValor() + "\n";
+                        total += b.getCantidad() * b.getValor();
+                    }
+
+                    if (bal == 0) {
                         System.out.println(texto);
                         System.out.println("Total a retirar: " + total);
                         balance -= total;
                         System.out.println("Balance luego del retiro: " + (balance));
-                    }
-                    else
+                    } else
                         System.out.println("El monto a retirar no se pudo procesar por: " + bal);
                     Iniciar();
                 case "3":
